@@ -112,3 +112,5 @@ https://www.evm.codes/ - A reference of EVM op codes
 In the site we can see loading and saving to storage takes a min of 100 gas while loading and saving from memory takes 3.
 
 So a good optimization for gas could be to r/w to memory instead of storage when possible
+
+We optimize withdraw() and create a new function cheaperWithdraw() and this reflects in snapshot as well

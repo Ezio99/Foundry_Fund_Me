@@ -138,6 +138,35 @@ contract FundMeTest is Test {
         );
     }
 
+
+        function testWithdrawWithMultipleFundersCheaper() public userFunded {
+        //Arrange
+        uint160 numberOfFunders = 10;
+        uint160 startingFunderIndex=1;
+        for (uint160 i = startingFunderIndex; i < numberOfFunders; i++) {
+            hoax(address(i), STARTING_BALANCE); // Create a new address with 10 ETH
+            fundMe.fund{value: MINIMUM_USD}();
+        }
+
+        uint256 startingOwnerBalance = fundMe.getOwner().balance;
+        uint256 startingFundMeBalance = address(fundMe).balance;
+
+        //Act
+        vm.startPrank(fundMe.getOwner());
+        fundMe.cheaperWithdraw(); //Should have spent gas? Default in anvil is 0 for gas price 
+        vm.stopPrank();
+
+        //Assert
+        uint256 endingOwnerBalance = fundMe.getOwner().balance;
+        uint256 endingFundMeBalance = address(fundMe).balance;
+        assertEq(endingFundMeBalance, 0, "FundMe balance should be 0 after withdrawal");
+        assertEq(
+            endingOwnerBalance,
+            startingOwnerBalance + startingFundMeBalance,
+            "Owner balance should be increased by the FundMe balance after withdrawal"
+        );
+    }
+
     //This wont pass just by running `forge test` because the contract address of the price feed is not on the local anvil chain.
     //But the contract does not live there
     //With mocks it will pass `forge test`
