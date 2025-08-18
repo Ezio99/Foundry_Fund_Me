@@ -114,3 +114,10 @@ In the site we can see loading and saving to storage takes a min of 100 gas whil
 So a good optimization for gas could be to r/w to memory instead of storage when possible
 
 We optimize withdraw() and create a new function cheaperWithdraw() and this reflects in snapshot as well
+
+
+Foundry devops - `forge install ChainAccelOrg/foundry-devops`
+- Keeps track of latest contract deployment
+
+Ran integration using - `forge test --mt testUserCanInteract -vvvv`
+
