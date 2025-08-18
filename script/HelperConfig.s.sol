@@ -14,12 +14,17 @@ contract HelperConfig is Script {
 
     NetworkConfig public activeNetworkConfig;
 
+    uint32 public constant SEPOLIA_CHAIN_ID = 11155111;
+    uint8 public constant ANVIL_DECIMALS = 8;
+    int256 public constant ANVIL_INITIAL_PRICE = 2000e8; 
+
+
     constructor() {
         //Every chain has its id
-        if (block.chainid == 11155111) {
+        if (block.chainid == SEPOLIA_CHAIN_ID) {
             activeNetworkConfig = getSepoliaEthConfig();
         } else {
-            activeNetworkConfig = getAnvilEthConfig();
+            activeNetworkConfig = getOrCreateAnvilEthConfig();
         }
     }
 
@@ -34,10 +39,15 @@ contract HelperConfig is Script {
 
 
     // Cant be pure since we use vm
-    function getAnvilEthConfig() public  returns (NetworkConfig memory) {
+    function getOrCreateAnvilEthConfig() public  returns (NetworkConfig memory) {
+        if(activeNetworkConfig.priceFeed != address(0)) {
+            //If we already have a mock deployed, return it
+            return activeNetworkConfig;
+        }
+
         //Deploy mock
         vm.startBroadcast();
-        MockV3Aggregator mockV3Aggregator = new MockV3Aggregator(8, 2000e8);
+        MockV3Aggregator mockV3Aggregator = new MockV3Aggregator(ANVIL_DECIMALS, ANVIL_INITIAL_PRICE);
         vm.stopBroadcast();
 
         //Return mock address

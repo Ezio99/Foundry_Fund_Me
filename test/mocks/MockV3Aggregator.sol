@@ -12,6 +12,8 @@ import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interf
  * its answer is unimportant
  */
 contract MockV3Aggregator is AggregatorV3Interface {
+    //In Solidity, when you declare a public state variable, the compiler automatically generates a getter function
+    //So this variable will have a getter function called `version()` which is called by the test
     uint256 public constant version = 4;
 
     uint8 public decimals;
