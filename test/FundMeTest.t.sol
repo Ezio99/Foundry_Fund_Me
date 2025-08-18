@@ -3,15 +3,18 @@ pragma solidity ^0.8.18;
 
 import {Test, console} from "forge-std/Test.sol";
 import {FundMe} from "../src/FundMe.sol";
+import {DeployFundMe} from "../script/DeployFundMe.s.sol";  
 
 contract FundMeTest is Test {
     FundMe fundMe;
+    
 
     function setUp() external {
         // This function is run before each test
         // You can set up initial conditions here
         console.log("Setting up the test environment...");
-        fundMe = new FundMe();
+        DeployFundMe deployFundMe = new DeployFundMe();
+        fundMe = deployFundMe.run();
     }
 
     function testMinimumUsd() public view {
@@ -30,8 +33,7 @@ contract FundMeTest is Test {
         console.log(msg.sender);
         assertEq(
             fundMe.i_owner(),
-            // msg.sender,
-            address(this),
+            msg.sender,
             "The owner should be the address that deployed the contract"
         );
     }
