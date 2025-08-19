@@ -1,66 +1,116 @@
-## Foundry
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+# Foundry_Fund_Me
 
-Foundry consists of:
+## Table of Contents
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+- [Foundry\_Fund\_Me](#foundry_fund_me)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [Build](#build)
+    - [Test](#test)
+    - [Local Testing (Anvil)](#local-testing-anvil)
+    - [Deployment](#deployment)
+    - [Interaction (Cast)](#interaction-cast)
+  - [Folder Structure](#folder-structure)
 
-## Documentation
+---
 
-https://book.getfoundry.sh/
+## Overview
+
+This is a minimal project allowing users to fund the contract owner with donations. The smart contract accepts ETH as donations, denominated in USD. Donations have a minimal USD value, otherwise they are rejected. The value is priced using a Chainlink price feed, and the smart contract keeps track of doners in case they are to be rewarded in the future.
+
+---
+
+## Prerequisites
+
+- [Foundry](https://book.getfoundry.sh/) installed (`forge`, `cast`, `anvil`) :contentReference[oaicite:4]{index=4}  
+- [Rust](https://www.rust-lang.org) toolchain (optional—only if contributing to Foundry itself)  
+- An Ethereum-compatible RPC endpoint (e.g., Alchemy, Infura) for deployment  
+- A funded Ethereum account or private key for deployment testing
+
+---
+
+## Installation
+
+Clone the repository and set up:
+
+```bash
+git clone https://github.com/Ezio99/Foundry_Fund_Me.git
+cd Foundry_Fund_Me
+forge install         # (if using submodules or dependencies)
+````
+
+
+---
 
 ## Usage
 
 ### Build
 
-```shell
-$ forge build
+Compile your smart contracts:
+
+```bash
+forge build
 ```
 
 ### Test
 
-```shell
-$ forge test
+Run all tests:
+
+```bash
+forge test
 ```
 
-### Format
+### Local Testing (Anvil)
 
-```shell
-$ forge fmt
+Start a local development blockchain:
+
+```bash
+anvil
 ```
 
-### Gas Snapshots
+### Deployment
 
-```shell
-$ forge snapshot
+Deploy scripts to a Sepolia network:
+
+```bash
+make verify-contract-sepolia
 ```
 
-### Anvil
+### Interaction (Cast)
 
-```shell
-$ anvil
+Interact with your deployed contracts:
+
+```bash
+cast <subcommand>
 ```
 
-### Deploy
+Try:
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+```bash
+cast call <contract_address> "myFunction(uint256)" 1 --rpc-url <YOUR_RPC_URL>
 ```
 
-### Cast
 
-```shell
-$ cast <subcommand>
+
+---
+
+## Folder Structure
+
+```text
+├── src/                # Solidity source files
+├── script/             # Deployment or interaction scripts
+├── test/               # Foundry test files
+├── lib/                # Optional external libraries
+├── .gas-snapshot       # Last gas report
+├── foundry.toml        # Foundry project config
+├── README.md          
+├── Notes.md            # Project or code notes
+└── .github/workflows   # CI/CD automations (if any)
 ```
 
-### Help
+---
 
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
