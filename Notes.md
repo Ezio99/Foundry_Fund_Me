@@ -1,3 +1,5 @@
+Sepolia deploy - `forge script script/DeploySimpleStorage.s.sol --rpc-url $ALCHEMY_SEPOLIA_RPC_URL --account MetaMask --sender $METAMASK_ACCOUNT --broadcast --password $LOCAL_PASSWORD -vvvv `
+
 Initialize project -  `forge init`
 Run tests - `forge test` 
 Run specific test - `forge test --mt <function_name> `
@@ -121,3 +123,7 @@ Foundry devops - `forge install ChainAccelOrg/foundry-devops`
 
 Ran integration using - `forge test --mt testUserCanInteract -vvvv`
 
+Now we have to type a lot of commands to run scripts. How do we make this easier? Makefiles
+
+They lets us automate stuff for devops stuff pretty easily.
+We can also replace our `source .env`
