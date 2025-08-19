@@ -3,11 +3,11 @@
 
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
+
 import {Script} from "forge-std/Script.sol";
-import {MockV3Aggregator} from "../test/mocks/MockV3Aggregator.sol";    
+import {MockV3Aggregator} from "../test/mocks/MockV3Aggregator.sol";
 
 contract HelperConfig is Script {
-
     struct NetworkConfig {
         address priceFeed; //Eth/USD price feed address
     }
@@ -16,8 +16,7 @@ contract HelperConfig is Script {
 
     uint32 public constant SEPOLIA_CHAIN_ID = 11155111;
     uint8 public constant ANVIL_DECIMALS = 8;
-    int256 public constant ANVIL_INITIAL_PRICE = 2000e8; 
-
+    int256 public constant ANVIL_INITIAL_PRICE = 2000e8;
 
     constructor() {
         //Every chain has its id
@@ -28,19 +27,13 @@ contract HelperConfig is Script {
         }
     }
 
-
-
     function getSepoliaEthConfig() public pure returns (NetworkConfig memory) {
-        return
-            NetworkConfig({
-                priceFeed: 0x694AA1769357215DE4FAC081bf1f309aDC325306
-            });
+        return NetworkConfig({priceFeed: 0x694AA1769357215DE4FAC081bf1f309aDC325306});
     }
 
-
     // Cant be pure since we use vm
-    function getOrCreateAnvilEthConfig() public  returns (NetworkConfig memory) {
-        if(activeNetworkConfig.priceFeed != address(0)) {
+    function getOrCreateAnvilEthConfig() public returns (NetworkConfig memory) {
+        if (activeNetworkConfig.priceFeed != address(0)) {
             //If we already have a mock deployed, return it
             return activeNetworkConfig;
         }
@@ -51,9 +44,7 @@ contract HelperConfig is Script {
         vm.stopBroadcast();
 
         //Return mock address
-        NetworkConfig memory anvilEthConfig = NetworkConfig({
-            priceFeed: address(mockV3Aggregator)
-        });
+        NetworkConfig memory anvilEthConfig = NetworkConfig({priceFeed: address(mockV3Aggregator)});
 
         return anvilEthConfig;
     }

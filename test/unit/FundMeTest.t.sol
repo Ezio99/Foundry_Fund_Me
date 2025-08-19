@@ -12,7 +12,7 @@ contract FundMeTest is Test {
     address USER = makeAddr("user");
     uint256 constant STARTING_BALANCE = 10 ether; // 10 ETH in wei
     uint256 public MINIMUM_USD = 5e18; // 5 USD in wei
-    uint256 public constant GAS_PRICE=1;
+    uint256 public constant GAS_PRICE = 1;
 
     function setUp() external {
         // This function is run before each test
@@ -31,11 +31,7 @@ contract FundMeTest is Test {
     }
 
     function testMinimumUsd() public view {
-        assertEq(
-            fundMe.MINIMUM_USD(),
-            MINIMUM_USD,
-            "Minimum USD should be 5 ETH"
-        );
+        assertEq(fundMe.MINIMUM_USD(), MINIMUM_USD, "Minimum USD should be 5 ETH");
     }
 
     function testOwnerIsMsgSender() public view {
@@ -43,11 +39,7 @@ contract FundMeTest is Test {
         console.log(fundMe.getOwner());
         // msg.sender is the address of the caller of the test function, which is also the Foundry-generated test contract address — but it’s not the same instance that deployed FundMe
         console.log(msg.sender);
-        assertEq(
-            fundMe.getOwner(),
-            msg.sender,
-            "The owner should be the address that deployed the contract"
-        );
+        assertEq(fundMe.getOwner(), msg.sender, "The owner should be the address that deployed the contract");
     }
 
     function testMinFundRevert() public {
@@ -57,7 +49,7 @@ contract FundMeTest is Test {
         fundMe.fund{value: lessThanThreshold}();
     }
 
-    function testFundUpdates() public  {
+    function testFundUpdates() public {
         vm.prank(USER); //Next TXN will be sent from USER address, makes it easier to test if we have predictably know which address is sending
         fundMe.fund{value: MINIMUM_USD}();
         uint256 expectedBalance = fundMe.getAddressToAmountFunded(USER);
@@ -65,13 +57,11 @@ contract FundMeTest is Test {
     }
 
     function testAddFunderToArray() public userFunded {
-
         address funder = fundMe.getFunder(0);
         assertEq(funder, USER, "The first funder should be the USER address");
     }
 
-
-    function testOnlyOwnerCanWithdraw() public userFunded{
+    function testOnlyOwnerCanWithdraw() public userFunded {
         vm.expectRevert(); //Next txn will revert not necessrily line
         vm.prank(USER);
         fundMe.withdraw();
@@ -79,7 +69,7 @@ contract FundMeTest is Test {
 
     //Think of tests in this way:
     //Arrange -> Act -> Assert
-    function testWithdrawWithASingleFunder() public userFunded{
+    function testWithdrawWithASingleFunder() public userFunded {
         //Arrange
         uint256 startingOwnerBalance = fundMe.getOwner().balance;
         uint256 startingFundMeBalance = address(fundMe).balance;
@@ -107,13 +97,12 @@ contract FundMeTest is Test {
             startingOwnerBalance + startingFundMeBalance,
             "Owner balance should be increased by the FundMe balance after withdrawal"
         );
-
     }
 
     function testWithdrawWithMultipleFunders() public userFunded {
         //Arrange
         uint160 numberOfFunders = 10;
-        uint160 startingFunderIndex=1;
+        uint160 startingFunderIndex = 1;
         for (uint160 i = startingFunderIndex; i < numberOfFunders; i++) {
             hoax(address(i), STARTING_BALANCE); // Create a new address with 10 ETH
             fundMe.fund{value: MINIMUM_USD}();
@@ -124,7 +113,7 @@ contract FundMeTest is Test {
 
         //Act
         vm.startPrank(fundMe.getOwner());
-        fundMe.withdraw(); //Should have spent gas? Default in anvil is 0 for gas price 
+        fundMe.withdraw(); //Should have spent gas? Default in anvil is 0 for gas price
         vm.stopPrank();
 
         //Assert
@@ -138,11 +127,10 @@ contract FundMeTest is Test {
         );
     }
 
-
-        function testWithdrawWithMultipleFundersCheaper() public userFunded {
+    function testWithdrawWithMultipleFundersCheaper() public userFunded {
         //Arrange
         uint160 numberOfFunders = 10;
-        uint160 startingFunderIndex=1;
+        uint160 startingFunderIndex = 1;
         for (uint160 i = startingFunderIndex; i < numberOfFunders; i++) {
             hoax(address(i), STARTING_BALANCE); // Create a new address with 10 ETH
             fundMe.fund{value: MINIMUM_USD}();
@@ -153,7 +141,7 @@ contract FundMeTest is Test {
 
         //Act
         vm.startPrank(fundMe.getOwner());
-        fundMe.cheaperWithdraw(); //Should have spent gas? Default in anvil is 0 for gas price 
+        fundMe.cheaperWithdraw(); //Should have spent gas? Default in anvil is 0 for gas price
         vm.stopPrank();
 
         //Assert
@@ -172,10 +160,6 @@ contract FundMeTest is Test {
     //With mocks it will pass `forge test`
     function testPriceFeedVersion() public view {
         uint256 expectedVersion = 4;
-        assertEq(
-            fundMe.getVersion(),
-            expectedVersion,
-            "The version should be 4"
-        );
+        assertEq(fundMe.getVersion(), expectedVersion, "The version should be 4");
     }
 }

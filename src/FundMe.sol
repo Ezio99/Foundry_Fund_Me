@@ -6,7 +6,6 @@ pragma solidity ^0.8.18;
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 import {PriceConverter} from "./PriceConverter.sol";
 
-
 //Best practice for custom error : ContractName__ErrorName
 // This is a custom error, which is more gas efficient than using require with a string message
 error FundMe__NotOwner();
@@ -47,7 +46,7 @@ contract FundMe {
     }
 
     //Optimized for gas
-    function cheaperWithdraw() public onlyOwner{
+    function cheaperWithdraw() public onlyOwner {
         // We store it here so that we don't have to read from storage multiple times
         //Remember storage variables are the state and global variables
         //Variables declared in this function are memory variables and cheaper to use
@@ -98,7 +97,7 @@ contract FundMe {
         fund();
     }
 
-        /**
+    /**
      * Getter Functions
      */
 
